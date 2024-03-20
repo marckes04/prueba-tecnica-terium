@@ -621,6 +621,7 @@ GameObject:
   - component: {fileID: 2292266663438817074}
   - component: {fileID: 8848268418028517812}
   - component: {fileID: 2083089368094645782}
+  - component: {fileID: 2044306643697994339}
   - component: {fileID: 8984146965563843624}
   - component: {fileID: 8364101993781210824}
   m_Layer: 8
@@ -873,6 +874,19 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &2044306643697994339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2415860767788364901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91450287838e33a4e946582b5d7707a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerCameraRoot: {fileID: 3675238071528679499}
 --- !u!114 &8984146965563843624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -887,7 +901,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SortKey: 724029157
   ObjectInterest: 1
-  Flags: 262145
+  Flags: 786433
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 8364101993781210824}
@@ -903,10 +917,10 @@ MonoBehaviour:
   m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SyncScale: 0
-  SyncParent: 0
+  SyncScale: 1
+  SyncParent: 1
   _autoAOIOverride: 1
-  DisableSharedModeInterpolation: 0
+  DisableSharedModeInterpolation: 1
 --- !u!1 &2624626967275741825
 GameObject:
   m_ObjectHideFlags: 0

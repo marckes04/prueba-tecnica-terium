@@ -16,6 +16,8 @@ namespace GooglyEyesGames.FusionBites
         [HideInInspector]
         public NetworkRunner runner;
 
+        [SerializeField] NetworkObject playerPrefab;
+
         private void Awake()
         {
             if(connectOnAway == true)
@@ -38,7 +40,7 @@ namespace GooglyEyesGames.FusionBites
                 GameMode = GameMode.Shared,
                 SessionName = "test",
                 PlayerCount = 2,
-                SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
+                //SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
 
             });
         }
@@ -46,6 +48,9 @@ namespace GooglyEyesGames.FusionBites
         public void OnConnectedToServer(NetworkRunner runner)
         {
             Debug.Log("Connected server");
+            NetworkObject playerObject = runner.Spawn(playerPrefab, Vector3.zero);
+
+            runner.SetPlayerObject(runner.LocalPlayer, playerObject);
         }
 
         public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
