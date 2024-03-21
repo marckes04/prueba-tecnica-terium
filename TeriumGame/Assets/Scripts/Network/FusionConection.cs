@@ -10,25 +10,36 @@ namespace GooglyEyesGames.FusionBites
 {
     public class FusionConection : MonoBehaviour, INetworkRunnerCallbacks
     {
-
+        public static FusionConection instance;
         public bool connectOnAway = false;
 
         [HideInInspector]
         public NetworkRunner runner;
 
+        [HideInInspector]
+        public static bool playerApperance = false;
+
         [SerializeField] NetworkObject playerPrefab;
+
+        public string _playerName = null;
 
         private void Awake()
         {
-            if(connectOnAway == true)
+            if(instance == null)
             {
-                ConnectToRunner();
+                instance = this;
             }
+            //if(connectOnAway == true)
+            //{
+            //    ConnectToRunner("Anonymous");
+            //}
         }
 
 
-        public async void ConnectToRunner()
+        public async void ConnectToRunner( string playerName )
         {
+            _playerName = playerName;
+
             if (runner == null)
             {
                 runner = gameObject.AddComponent<NetworkRunner>();
@@ -48,9 +59,13 @@ namespace GooglyEyesGames.FusionBites
         public void OnConnectedToServer(NetworkRunner runner)
         {
             Debug.Log("Connected server");
-            NetworkObject playerObject = runner.Spawn(playerPrefab, Vector3.zero);
 
-            runner.SetPlayerObject(runner.LocalPlayer, playerObject);
+            if (playerApperance)
+            {
+                NetworkObject playerObject = runner.Spawn(playerPrefab, Vector3.zero);
+
+                runner.SetPlayerObject(runner.LocalPlayer, playerObject);
+            }
         }
 
         public void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
