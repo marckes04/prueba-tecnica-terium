@@ -7,7 +7,8 @@ using GooglyEyesGames.FusionBites;
 
 public class SessionEntryPrefab : MonoBehaviour
 {
-    public TextMeshProUGUI sessionName, playerCount;
+    public TextMeshProUGUI sessionName;
+    public TextMeshProUGUI playerCount;
     public Button joinButton;
 
     private void Awake()
