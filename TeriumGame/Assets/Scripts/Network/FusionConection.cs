@@ -4,6 +4,7 @@ using UnityEngine;
 using Fusion;
 using Fusion.Sockets;
 using System;
+using UnityEngine.UI;
 
 
 namespace GooglyEyesGames.FusionBites
@@ -23,6 +24,15 @@ namespace GooglyEyesGames.FusionBites
 
         public string _playerName = null;
 
+
+
+        [Header("Session List")]
+        public GameObject roomListCanvas;
+        private List<SessionInfo> _sessions = new List<SessionInfo>();
+        public Button refreshButton;
+        public Transform sessionListContent;
+        public GameObject sessionEntryPrefab;
+
         private void Awake()
         {
             if(instance == null)
@@ -36,9 +46,44 @@ namespace GooglyEyesGames.FusionBites
         }
 
 
-        public async void ConnectToRunner( string playerName )
+
+        public async  void ConnectToLobby(string playerName)
         {
+            roomListCanvas.SetActive(true);
             _playerName = playerName;
+
+            if (runner == null)
+            {
+                runner = gameObject.AddComponent<NetworkRunner>();
+            }
+            runner.JoinSessionLobby(SessionLobby.Shared);
+
+        }
+
+
+        public async void ConnectToSession(string sessionName)
+        {
+            roomListCanvas.SetActive(false);
+            if (runner == null)
+            {
+                runner = gameObject.AddComponent<NetworkRunner>();
+            }
+
+            await runner.StartGame(new StartGameArgs()
+            {
+
+                GameMode = GameMode.Shared,
+                SessionName = sessionName,
+                PlayerCount = 2,
+
+            });
+        }
+
+        public async void  CreateSession()
+        {
+            roomListCanvas.SetActive(false);
+            int randomInt = UnityEngine.Random.Range(1000, 9999);
+            string randomSessionName = "Room-" + randomInt.ToString();
 
             if (runner == null)
             {
@@ -49,9 +94,8 @@ namespace GooglyEyesGames.FusionBites
             {
 
                 GameMode = GameMode.Shared,
-                SessionName = "test",
+                SessionName = randomSessionName,
                 PlayerCount = 2,
-                //SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>(),
 
             });
         }
@@ -60,11 +104,45 @@ namespace GooglyEyesGames.FusionBites
         {
             Debug.Log("Connected server");
 
-            if (playerApperance)
-            {
+           
                 NetworkObject playerObject = runner.Spawn(playerPrefab, Vector3.zero);
 
                 runner.SetPlayerObject(runner.LocalPlayer, playerObject);
+           
+        }
+
+        public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
+        {
+           _sessions.Clear();
+           _sessions = sessionList;
+        }
+
+        public void RefreshSessionListUI()
+        {
+            //clears our Session List
+            foreach(Transform child in sessionListContent)
+            {
+                Destroy(child.gameObject);
+            }
+
+            foreach(SessionInfo session in _sessions)
+            {
+                if (session.IsVisible)
+                {
+                    GameObject entry = GameObject.Instantiate(sessionEntryPrefab, sessionListContent);
+                    SessionEntryPrefab script = entry.GetComponent<SessionEntryPrefab>();
+                    script.sessionName.text = session.Name;
+                    script.playerCount.text = session.PlayerCount + "/" + session.MaxPlayers;
+
+                    if(session.IsOpen == false || session.PlayerCount >= session.MaxPlayers)
+                    {
+                        script.joinButton.interactable = false;
+                    }
+                    else
+                    {
+                        script.joinButton.interactable= true;
+                    }
+                }
             }
         }
 
@@ -143,10 +221,7 @@ namespace GooglyEyesGames.FusionBites
 
         }
 
-        public void OnSessionListUpdated(NetworkRunner runner, List<SessionInfo> sessionList)
-        {
-
-        }
+       
 
         public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
         {
