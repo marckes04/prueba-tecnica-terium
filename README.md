@@ -31,5 +31,6 @@ Al unirse a una partida se observara la escena de juego
 
 se vera el nombre del jugador con la vida respectiva y con la tecla L dispararia los controles de mover serian flechas y AWSD
 
+![image](https://github.com/marckes04/prueba-tecnica-terium/assets/71477601/2d401f83-db4d-446a-ab16-126ad78c3218)
 
 
